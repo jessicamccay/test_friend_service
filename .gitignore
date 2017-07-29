@@ -1,0 +1,12 @@
+# go
+/bin/
+/pkg/
+
+# exclude all src except for service and protobuf
+src/*
+!src/friends.uacf.io/
+!src/third_party/
+
+.idea/
+.gitreview
+.DS_Store

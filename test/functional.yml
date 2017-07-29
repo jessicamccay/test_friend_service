@@ -1,0 +1,8 @@
+# this is the bare minimum to get functional tests to pass
+test:
+    image: docker.uacf.io/svc_friends/friendsapi:CIVERSION
+    command: |
+      bash -c "mkdir /out/ && go test -v friends.uacf.io/... | go2xunit | tee /out/TEST-output.xml"
+    environment:
+      - GOCONVEY_REPORTER=dot
+# add environment variables and links to other images as needed for functional tests

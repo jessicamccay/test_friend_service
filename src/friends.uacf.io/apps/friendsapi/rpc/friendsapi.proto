@@ -1,0 +1,132 @@
+syntax = "proto3";
+option go_package = "rpc";
+package io.uacf.friends;
+
+import "third_party/google/api/annotations.proto";
+
+// Messages for resource operations (see service notes below)
+message Friendship {
+    string id = 1;
+    string from_user_id = 2;
+    string to_user_id = 3;
+    string friends_since = 4;
+    string status = 5;
+}
+
+message CreateRequest {
+    Friendship friendship = 1;
+}
+
+message CreateResponse {
+    Friendship friendship = 1;
+}
+
+message GetRequest {
+    int64 id = 1;
+}
+
+message GetResponse {
+    Friendship friendship = 1;
+}
+
+message ListRequest {
+    string status = 1;
+    string from_user_id = 2;
+    string to_user_id = 3;
+}
+
+message ListResponse {
+    repeated Friendship friendships = 1;
+}
+
+// Messages for imperative operations (see service notes below)
+message MethodRequest {
+    string parameter1 = 1;
+    string parameter2 = 2;
+}
+
+message MethodResponse {
+    string result = 1;
+}
+
+// Ping request/response
+message PingRequest {
+}
+
+message PongResponse {
+  bool pong = 1;
+}
+
+service FriendsApiService {
+
+    // -------------------------
+    // Ping operation for determining service health
+    // -------------------------
+    rpc Ping(PingRequest) returns (PongResponse) {
+        option (google.api.http) = {
+            get: "/ping"
+        };
+    }
+
+    // -------------------------
+    // Resource operations
+    //
+    // The following conventions are recommended for providing a resource-based representation in a microservice API.
+    // This pattern allows consistent mapping from RPC methods to a RESTful implementation (for example when exposed
+    // via a public REST API).
+    //
+    // Imperative operations (see below) should only be utilized for specific use cases where
+    // resource-based operations are not appropriate.
+    // -------------------------
+//    rpc Create(CreateRequest) returns (CreateResponse) {
+//        option (google.api.http) = {
+//            post: "/v1/rest/friendsapi"
+//            body: "*"
+//        };
+//    }
+
+    rpc Get(GetRequest) returns (GetResponse) {
+        option (google.api.http) = {
+            get: "/v1/rest/friendsapi/{id}"
+        };
+    }
+
+//    rpc Update(UpdateRequest) returns (UpdateResponse) {
+//        option (google.api.http) = {
+//            put: "/v1/rest/friendsapi/{id}"
+//            body: "*"
+//        };
+//    }
+//
+//    rpc Delete(DeleteRequest) returns (DeleteResponse) {
+//        option (google.api.http) = {
+//            delete: "/v1/rest/friendsapi/{id}"
+//        };
+//    }
+
+    rpc List(ListRequest) returns (ListResponse) {
+        option (google.api.http) = {
+            get: "/v1/rest/friendsapi"
+            body: "*"
+        };
+    }
+
+//    // -------------------------
+//    // Imperative operations
+//    //
+//    // The following convention is recommended for providing imperative operations in a microservice API.
+//    //
+//    // Imperative operations provide support for use cases where resource-based operations are not
+//    // appropriate. Use imperative operations sparingly.
+//    // -------------------------
+//    rpc Method(MethodRequest) returns (MethodResponse) {
+//        option (google.api.http) = {
+//            post: "/v1/rpc/friendsapi/method"
+//            body: "*"
+//        };
+//    }
+//
+//    // Streaming methods don't necessarily have a direct map to the server.
+//    rpc StreamingMethod(MethodRequest) returns (stream Friendship);
+
+}

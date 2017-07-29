@@ -1,0 +1,60 @@
+friendsapi:
+    build: .
+    dockerfile: docker/friendsapi/Dockerfile
+    ports:
+        - 8080:80
+        - 8081:81
+        - 8082:82
+    environment:
+      ENVIRONMENT: local
+      GRPC_SERVE_PORT: 81
+      HTTP_SERVE_PORT: 80
+      LOG_LEVEL: debug
+    links:
+        - mysql
+
+## configuration that connects to monitoring containers for local testing (metrics, sentry etc.)
+#friendsapim:
+#    extends:
+#        file: docker-compose.yml
+#        service: friendsapi
+#    links:
+#      - statsd:metrics
+#      - sentry:sentry
+#    environment:
+#      LOG_LEVEL: debug
+#      METRICS_FLUSH_INTERVAL: 100ms
+#      METRICS_PORT: udp://metrics:8125
+#      SENTRY_DSN: http://local:secret@sentry:9000/2
+#
+#
+#mysql:
+#    build: docker/mysql
+#    ports:
+#        - 3306:3306
+#    environment:
+#        MYSQL_ROOT_PASSWORD: password
+#        MYSQL_DATABASE: mapmyfitness
+
+mysql:
+    image: docker.uacf.io/panama/mysql:master
+    command: mysqld --datadir=/data/mysql --user=mysql --sql-mode=""
+    ports:
+        - "3306:3306"
+#    environment:
+#      - MYSQL_ROOT_PASSWORD: "password"
+
+# statsd/graphite for local testing (http://<dockerip>:8888)
+statsd:
+    image: hopsoft/graphite-statsd
+    ports:
+        - 8888:80
+
+# sentry image for local testing (http://<dockerip>:9000 - log in with admin/admin)
+sentry:
+    build: docker/sentry
+    command: start
+    ports:
+        - 9000:9000
+    environment:
+      - SENTRY_URL_PREFIX=http://docker:9000

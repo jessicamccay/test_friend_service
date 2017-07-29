@@ -1,0 +1,11 @@
+pkg
+bin
+
+# exclude all src except for service
+# Note: exclusion rules aren't support in .dockerignore (yet)
+# see https://github.com/docker/docker/pull/12245
+src/github.com
+src/go.uacf.io
+src/golang.org
+src/google.golang.org
+src/gopkg.in

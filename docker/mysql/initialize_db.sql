@@ -1,0 +1,38 @@
+-- # ------------------------------------------------------------
+-- # CREATE datapath tables
+-- # ------------------------------------------------------------
+-- CREATE TABLE `step` (
+--   `datapath_id` char(30) CHARACTER SET 'latin1' NOT NULL,
+--   `created_datetime_utc` datetime NOT NULL,
+--   `component` varchar(255) NOT NULL,
+--   `flattened_datapath` MEDIUMTEXT,
+--   PRIMARY KEY (`datapath_id`),
+--   KEY `component` (`component`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- CREATE TABLE `step_parents` (
+--   `datapath_id` char(30) CHARACTER SET 'latin1' NOT NULL,
+--   `parent_id` char(30) CHARACTER SET 'latin1' NOT NULL,
+--   PRIMARY KEY (`datapath_id`, `parent_id`),
+--   FOREIGN KEY fk_step(datapath_id) REFERENCES step(datapath_id)
+--   ON DELETE RESTRICT
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- CREATE TABLE `datapath_user` (
+--   `datapath_id` char(30) CHARACTER SET 'latin1' NOT NULL,
+--   `domain` varchar(16) NOT NULL,
+--   `domain_user_id` varchar(19) NOT NULL,
+--   PRIMARY KEY (`datapath_id`, `domain`, `domain_user_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- # TODO indexes for searching by datapath_id, and by domain/user_id?
+--
+-- # ------------------------------------------------------------
+-- # INSERT example datapath data
+-- # ------------------------------------------------------------
+--
+--
+--
+-- INSERT INTO `step` (`datapath_id`, `created_datetime_utc`, `component`, `flattened_datapath`)
+-- VALUES
+-- 	('222426781a4d2b7e91c52ba60ad78f', now(), 'com.ua', '{"id":"222426781a4d2b7e91c52ba60ad78f","paths":{"222426781a4d2b7e91c52ba60ad78f":{"item":{"component":"com.ua"}}}}')
+-- ;
